@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <artifactId>bom-common</artifactId>
+        <groupId>dev.xethh.libs.toolkits</groupId>
+        <version>1.0.4</version>
+    </parent>
+
+    <groupId>dev.xethh.utils</groupId>
+    <artifactId>WrappedResult</artifactId>
+    <version>1.0.0</version>
+
+    <name>WrappedResult</name>
+
+    <url>https://github.com/xh-dev/WrappedResult</url>
+    <description>A library contain a process result container.</description>
+
+    <scm>
+        <connection>scm:git:git@github.com:xh-dev/WrappedResult.git</connection>
+        <developerConnection>scm:git:git@github.com:xh-dev/WrappedResult.git</developerConnection>
+        <url>https://github.com/xh-dev/WrappedResult</url>
+    </scm>
+
+</project>
