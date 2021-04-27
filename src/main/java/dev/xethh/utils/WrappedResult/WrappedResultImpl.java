@@ -4,11 +4,11 @@ import dev.xethh.utils.WrappedResult.exceptions.NoExceptionForError;
 
 import java.util.Optional;
 
-public class WrappedResultImpl<R extends Object> implements WrappedResult<R> {
-    private final Optional<R> obj;
+public class WrappedResultImpl<I extends Object> implements WrappedResult<I> {
+    private final Optional<I> obj;
     private final Throwable exception;
 
-    protected WrappedResultImpl(R obj) {
+    protected WrappedResultImpl(I obj) {
         this.obj = Optional.ofNullable(obj);
         this.exception = null;
     }
@@ -20,7 +20,7 @@ public class WrappedResultImpl<R extends Object> implements WrappedResult<R> {
     }
 
     @Override
-    public Optional<R> resultOpt() {
+    public Optional<I> resultOpt() {
         return obj;
     }
 
@@ -29,4 +29,11 @@ public class WrappedResultImpl<R extends Object> implements WrappedResult<R> {
         return exception;
     }
 
+    @Override
+    public String toString() {
+        return "WrappedResultImpl{" +
+                "obj=" + obj +
+                ", exception=" + (exception==null ? "[null]" : "["+exception.getMessage()+"]" ) +
+                '}';
+    }
 }

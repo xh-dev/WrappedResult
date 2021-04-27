@@ -135,8 +135,8 @@ public class AppTest
                 });
         assertEquals(1, i.get());
 
-        assertTrue(WrappedResult.of(1).hasErrorOpt().isEmpty());
-        assertTrue(WrappedResult.of(null).hasErrorOpt().isEmpty());
+        assertFalse(WrappedResult.of(1).hasErrorOpt().isPresent());
+        assertFalse(WrappedResult.of(null).hasErrorOpt().isPresent());
         assertTrue(WrappedResult.error(new Throwable()).hasErrorOpt().isPresent());
 
         assertTrue(WrappedResult.of(1).noErrorOpt().isPresent());
@@ -146,6 +146,12 @@ public class AppTest
         assertTrue(WrappedResult.of(1).noErrorAndOccupiedOpt().isPresent());
         assertFalse(WrappedResult.of(null).noErrorAndOccupiedOpt().isPresent());
         assertFalse(WrappedResult.error(new Throwable()).noErrorAndOccupiedOpt().isPresent());
+
+        assertEquals("1", WrappedResult.of(1).mapTo(x->x+"").result());
+        assertEquals("null",WrappedResult.of(null).mapTo(x->x+"").result());
+        assertNull(WrappedResult.of(null).mapOccupiedTo(x->x+"").result());
+
+
     }
 
 }

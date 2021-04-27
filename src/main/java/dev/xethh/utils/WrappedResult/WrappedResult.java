@@ -3,7 +3,7 @@ package dev.xethh.utils.WrappedResult;
 import java.util.Optional;
 import java.util.concurrent.Callable;
 import java.util.function.Consumer;
-import java.util.function.Supplier;
+import java.util.function.Function;
 
 /**
  * An container for wrapping operation result inside.
@@ -11,20 +11,20 @@ import java.util.function.Supplier;
  * 1. <b>Complete with operation result</b>
  * 2. <b>Complete with error</b>
  * By wrapping either <b>result{@link WrappedResult#result()}</b> or <b>error{@link WrappedResult#error()}</b> into {@link WrappedResult}
- * @param <R> the result returned from process
+ * @param <I> the result returned from process
  */
-public interface WrappedResult<R> {
+public interface WrappedResult<I> {
     /**
      * result in optional form
      * @return {@link Optional} of result object
      */
-    Optional<R> resultOpt();
+    Optional<I> resultOpt();
 
     /**
      * return result of the {@link WrappedResult}
      * @return result object
      */
-    default R result(){
+    default I result() {
         return resultOpt().orElse(null);
     }
 
@@ -37,30 +37,30 @@ public interface WrappedResult<R> {
     /**
      * static method create {@link WrappedResult} of success result and contain <b>result</b>
      * @param obj result object
-     * @param <R> type of result object
+     * @param <I> type of result object
      * @return {@link WrappedResult}
      */
-    static <R> WrappedResult<R> of(R obj) {
+    static <I> WrappedResult<I> of(I obj) {
         return new WrappedResultImpl<>(obj);
     }
 
     /**
      * static method create {@link WrappedResult} of error result and contain <b>error</b>
      * @param throwable exception thrown
-     * @param <R> type of result object
+     * @param <I> type of result object
      * @return {@link WrappedResult}
      */
-    static <R> WrappedResult<R> error(Throwable throwable) {
+    static <I> WrappedResult<I> error(Throwable throwable) {
         return new WrappedResultImpl<>(throwable);
     }
 
     /**
      * static method create {@link WrappedResult} from callable
      * @param callable {@link Callable} return type <b>R</b>
-     * @param <R> type of result object
+     * @param <I> type of result object
      * @return {@link WrappedResult}
      */
-    static <R> WrappedResult<R> call(Callable<R> callable) {
+    static <I> WrappedResult<I> call(Callable<I> callable) {
         try {
             return of(callable.call());
         } catch (Throwable t) {
@@ -125,7 +125,7 @@ public interface WrappedResult<R> {
      * @param operation further process operation if match condition
      * @return {@link WrappedResult}
      */
-    default WrappedResult<R> ifError(Consumer<Throwable> operation) {
+    default WrappedResult<I> ifError(Consumer<Throwable> operation) {
         if (hasError()) {
             operation.accept(error());
         }
@@ -138,7 +138,7 @@ public interface WrappedResult<R> {
      * @param operation further process operation if match condition
      * @return {@link WrappedResult}
      */
-    default WrappedResult<R> ifNoError(Consumer<Optional<R>> operation) {
+    default WrappedResult<I> ifNoError(Consumer<Optional<I>> operation) {
         if (noError()) {
             operation.accept(resultOpt());
         }
@@ -151,11 +151,44 @@ public interface WrappedResult<R> {
      * @param operation further process operation if match condition
      * @return {@link WrappedResult}
      */
-    default WrappedResult<R> ifNoErrorAndOccupied(Consumer<R> operation) {
+    default WrappedResult<I> ifNoErrorAndOccupied(Consumer<I> operation) {
         if (noError() && occupied()) {
             operation.accept(result());
         }
         return this;
+    }
+
+    /**
+     * Map {@link WrappedResult}&#60;I&#62; to {@link WrappedResult}&#60;O&#62; when no error
+     * null mabye passed in as parameter. Use {@link #mapOccupiedTo(Function)} instead if done want null value
+     *
+     * @param flow process flow that applied object of I to map object of O
+     * @param <O>  output generic type O
+     * @return {@link WrappedResult}&#60;O&#62;
+     */
+    default <O> WrappedResult<O> mapTo(Function<I, O> flow) {
+        if (noError()) {
+            return WrappedResult.call(() -> flow.apply(result()));
+        } else
+            return WrappedResult.error(error());
+    }
+
+    /**
+     * Map {@link WrappedResult}&#60;I&#62; to {@link WrappedResult}&#60;O&#62; only when no error and value no null
+     *
+     * @param flow process flow that applied object of I to map object of O
+     * @param <O>  output generic type O
+     * @return {@link WrappedResult}&#60;O&#62;
+     */
+    default <O> WrappedResult<O> mapOccupiedTo(Function<I, O> flow) {
+        if (noError()) {
+            if (occupied()) {
+                return WrappedResult.call(() -> flow.apply(result()));
+            } else {
+                return WrappedResult.of(null);
+            }
+        } else
+            return WrappedResult.error(error());
     }
 
     /**
@@ -164,7 +197,7 @@ public interface WrappedResult<R> {
      * @param operation further process operation if match condition, the process takes no argument
      * @return {@link WrappedResult}
      */
-    default WrappedResult<R> ifNoErrorButEmpty(Runnable operation) {
+    default WrappedResult<I> ifNoErrorButEmpty(Runnable operation) {
         if (noError() && empty()) {
             operation.run();
         }
@@ -184,7 +217,7 @@ public interface WrappedResult<R> {
      * It could be further detected if it is {@link WrappedResult#occupied()} or {@link WrappedResult#empty()}
      * @return {@link Optional} of {@link WrappedResult} of result object
      */
-    default Optional<WrappedResult<R>> noErrorOpt() {
+    default Optional<WrappedResult<I>> noErrorOpt() {
         return Optional.of(this)
                 .filter(WrappedResult::noError);
     }
@@ -193,7 +226,7 @@ public interface WrappedResult<R> {
      * if {@link WrappedResult} has no error and is occupied, return {@link Optional} of result object
      * @return {@link Optional} of result object
      */
-    default Optional<R> noErrorAndOccupiedOpt() {
+    default Optional<I> noErrorAndOccupiedOpt() {
         return Optional.of(this)
                 .filter(WrappedResult::noError)
                 /*

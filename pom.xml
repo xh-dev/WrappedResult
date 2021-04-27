@@ -12,9 +12,13 @@
 
     <groupId>dev.xethh.utils</groupId>
     <artifactId>WrappedResult</artifactId>
-    <version>1.0.0</version>
+    <version>1.0.1</version>
 
     <name>WrappedResult</name>
+    <properties>
+        <maven.compiler.target>1.8</maven.compiler.target>
+        <maven.compiler.source>1.8</maven.compiler.source>
+    </properties>
 
     <url>https://github.com/xh-dev/WrappedResult</url>
     <description>A library contain a process result container.</description>
