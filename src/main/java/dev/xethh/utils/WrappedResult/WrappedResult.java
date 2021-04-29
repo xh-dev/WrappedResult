@@ -11,31 +11,13 @@ import java.util.function.Function;
  * 1. <b>Complete with operation result</b>
  * 2. <b>Complete with error</b>
  * By wrapping either <b>result{@link WrappedResult#result()}</b> or <b>error{@link WrappedResult#error()}</b> into {@link WrappedResult}
+ *
  * @param <I> the result returned from process
  */
 public interface WrappedResult<I> {
     /**
-     * result in optional form
-     * @return {@link Optional} of result object
-     */
-    Optional<I> resultOpt();
-
-    /**
-     * return result of the {@link WrappedResult}
-     * @return result object
-     */
-    default I result() {
-        return resultOpt().orElse(null);
-    }
-
-    /**
-     * error value of the {@link WrappedResult}
-     * @return {@link Throwable}
-     */
-    Throwable error();
-
-    /**
      * static method create {@link WrappedResult} of success result and contain <b>result</b>
+     *
      * @param obj result object
      * @param <I> type of result object
      * @return {@link WrappedResult}
@@ -46,8 +28,9 @@ public interface WrappedResult<I> {
 
     /**
      * static method create {@link WrappedResult} of error result and contain <b>error</b>
+     *
      * @param throwable exception thrown
-     * @param <I> type of result object
+     * @param <I>       type of result object
      * @return {@link WrappedResult}
      */
     static <I> WrappedResult<I> error(Throwable throwable) {
@@ -56,8 +39,9 @@ public interface WrappedResult<I> {
 
     /**
      * static method create {@link WrappedResult} from callable
+     *
      * @param callable {@link Callable} return type <b>R</b>
-     * @param <I> type of result object
+     * @param <I>      type of result object
      * @return {@link WrappedResult}
      */
     static <I> WrappedResult<I> call(Callable<I> callable) {
@@ -70,6 +54,7 @@ public interface WrappedResult<I> {
 
     /**
      * static method create {@link WrappedResult} from runnable
+     *
      * @param runnable {@link Runnable} return void
      * @return {@link WrappedResult}
      */
@@ -83,10 +68,34 @@ public interface WrappedResult<I> {
     }
 
     /**
+     * result in optional form
+     *
+     * @return {@link Optional} of result object
+     */
+    Optional<I> resultOpt();
+
+    /**
+     * return result of the {@link WrappedResult}
+     *
+     * @return result object
+     */
+    default I result() {
+        return resultOpt().orElse(null);
+    }
+
+    /**
+     * error value of the {@link WrappedResult}
+     *
+     * @return {@link Throwable}
+     */
+    Throwable error();
+
+    /**
      * Test if the result is empty
      * The will be empty if
      * 1. has error
      * 2. no error but result is null
+     *
      * @return {@link Boolean}
      */
     default boolean empty() {
@@ -97,6 +106,7 @@ public interface WrappedResult<I> {
      * Test if the result is occupied
      * The will be occupied if
      * 1. no error
+     *
      * @return {@link Boolean}
      */
     default boolean occupied() {
@@ -105,6 +115,7 @@ public interface WrappedResult<I> {
 
     /**
      * Test if the result has error
+     *
      * @return {@link Boolean}
      */
     default boolean hasError() {
@@ -113,6 +124,7 @@ public interface WrappedResult<I> {
 
     /**
      * Test if the result has no error
+     *
      * @return {@link Boolean}
      */
     default boolean noError() {
@@ -122,6 +134,7 @@ public interface WrappedResult<I> {
     /**
      * Do operation when
      * 1. result has error
+     *
      * @param operation further process operation if match condition
      * @return {@link WrappedResult}
      */
@@ -135,6 +148,7 @@ public interface WrappedResult<I> {
     /**
      * Do operation when
      * 1. no error
+     *
      * @param operation further process operation if match condition
      * @return {@link WrappedResult}
      */
@@ -212,6 +226,7 @@ public interface WrappedResult<I> {
     /**
      * Do operation when
      * 1. no error and result {@link WrappedResult#empty()}
+     *
      * @param operation further process operation if match condition, the process takes no argument
      * @return {@link WrappedResult}
      */
@@ -224,6 +239,7 @@ public interface WrappedResult<I> {
 
     /**
      * if {@link WrappedResult} has error, return {@link Optional} of the {@link Throwable}
+     *
      * @return {@link Throwable}
      */
     default Optional<Throwable> hasErrorOpt() {
@@ -233,6 +249,7 @@ public interface WrappedResult<I> {
     /**
      * if {@link WrappedResult} has no error, return {@link Optional} of {@link WrappedResult}
      * It could be further detected if it is {@link WrappedResult#occupied()} or {@link WrappedResult#empty()}
+     *
      * @return {@link Optional} of {@link WrappedResult} of result object
      */
     default Optional<WrappedResult<I>> noErrorOpt() {
@@ -242,6 +259,7 @@ public interface WrappedResult<I> {
 
     /**
      * if {@link WrappedResult} has no error and is occupied, return {@link Optional} of result object
+     *
      * @return {@link Optional} of result object
      */
     default Optional<I> noErrorAndOccupiedOpt() {

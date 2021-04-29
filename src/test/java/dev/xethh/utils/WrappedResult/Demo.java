@@ -1,7 +1,7 @@
 package dev.xethh.utils.WrappedResult;
 
 public class Demo {
-    public static void main(String[] args){
+    public static void main(String[] args) {
         int resultFromProcess = 1;
         WrappedResult<Integer> wrapped = WrappedResult.of(resultFromProcess);
         System.out.println(wrapped.hasError()); // false
@@ -79,15 +79,15 @@ public class Demo {
         System.out.println(wrappedB.error().getMessage());        // thrown message 1
 
         // execute map if no error
-        System.out.println(WrappedResult.of(1).mapTo(i->i+"").result());               // 1
+        System.out.println(WrappedResult.of(1).mapTo(i -> i + "").result());               // 1
 
         // execute mapOccupiedTo if no error and value not empty
-        System.out.println(WrappedResult.of(1).mapOccupiedTo(i->i+"").result());       // 1
+        System.out.println(WrappedResult.of(1).mapOccupiedTo(i -> i + "").result());       // 1
 
         // execute mapOccupiedTo if no error and value not empty, the block i->i+" 1" not executed
-        System.out.println(WrappedResult.of(null).mapOccupiedTo(i->i+" 1").result());    // null
+        System.out.println(WrappedResult.of(null).mapOccupiedTo(i -> i + " 1").result());    // null
 
         // execute mapOccupiedTo if no error, the block i->i+" 1" executed
-        System.out.println(WrappedResult.of(null).mapTo(i->i+" 1").result());            // null 1
+        System.out.println(WrappedResult.of(null).mapTo(i -> i + " 1").result());            // null 1
     }
 }

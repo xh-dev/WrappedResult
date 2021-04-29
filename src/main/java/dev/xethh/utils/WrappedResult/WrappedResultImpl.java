@@ -12,6 +12,7 @@ public class WrappedResultImpl<I extends Object> implements WrappedResult<I> {
         this.obj = Optional.ofNullable(obj);
         this.exception = null;
     }
+
     protected WrappedResultImpl(Throwable exception) {
         if (exception == null)
             throw new NoExceptionForError();
@@ -33,7 +34,7 @@ public class WrappedResultImpl<I extends Object> implements WrappedResult<I> {
     public String toString() {
         return "WrappedResultImpl{" +
                 "obj=" + obj +
-                ", exception=" + (exception==null ? "[null]" : "["+exception.getMessage()+"]" ) +
+                ", exception=" + (exception == null ? "[null]" : "[" + exception.getMessage() + "]") +
                 '}';
     }
 }

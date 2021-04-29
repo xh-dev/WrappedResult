@@ -10,8 +10,7 @@ import static org.junit.Assert.*;
 /**
  * Unit test for simple App.
  */
-public class AppTest 
-{
+public class AppTest {
     @Test
     public void test() {
         WrappedResult<Integer> xx = WrappedResult.of(1);
@@ -32,7 +31,7 @@ public class AppTest
         assertFalse(xx.occupied());
         assertTrue(xx.empty());
 
-        assertThrows(NoExceptionForError.class, ()->WrappedResult.error(null));
+        assertThrows(NoExceptionForError.class, () -> WrappedResult.error(null));
 
         WrappedResult<Boolean> yy = WrappedResult.run(() -> {
             System.out.println("test");
@@ -73,19 +72,19 @@ public class AppTest
 
         AtomicInteger i = new AtomicInteger(0);
         WrappedResult.of(1)
-                .ifError(t->{
+                .ifError(t -> {
                     i.addAndGet(1);
                 })
-                .ifNoError(it->{
+                .ifNoError(it -> {
                     i.addAndGet(2);
                 })
-                .ifNoErrorAndOccupied(it->{
+                .ifNoErrorAndOccupied(it -> {
                     i.addAndGet(4);
                 })
-                .ifNoErrorButEmpty(()->{
+                .ifNoErrorButEmpty(() -> {
                     i.addAndGet(8);
                 })
-                .ifErrorOrEmpty(it->
+                .ifErrorOrEmpty(it ->
                         i.addAndGet(16)
                 )
         ;
@@ -93,19 +92,19 @@ public class AppTest
 
         i.set(0);
         WrappedResult.of(null)
-                .ifError(t->{
+                .ifError(t -> {
                     i.addAndGet(1);
                 })
-                .ifNoError(it->{
+                .ifNoError(it -> {
                     i.addAndGet(2);
                 })
-                .ifNoErrorAndOccupied(it->{
+                .ifNoErrorAndOccupied(it -> {
                     i.addAndGet(4);
                 })
-                .ifNoErrorButEmpty(()->{
+                .ifNoErrorButEmpty(() -> {
                     i.addAndGet(8);
                 })
-                .ifErrorOrEmpty(it->
+                .ifErrorOrEmpty(it ->
                         i.addAndGet(16)
                 )
         ;
@@ -113,19 +112,19 @@ public class AppTest
 
         i.set(0);
         WrappedResult.of(new Throwable())
-                .ifError(t->{
+                .ifError(t -> {
                     i.addAndGet(1);
                 })
-                .ifNoError(it->{
+                .ifNoError(it -> {
                     i.addAndGet(2);
                 })
-                .ifNoErrorAndOccupied(it->{
+                .ifNoErrorAndOccupied(it -> {
                     i.addAndGet(4);
                 })
-                .ifNoErrorButEmpty(()->{
+                .ifNoErrorButEmpty(() -> {
                     i.addAndGet(8);
                 })
-                .ifErrorOrEmpty(it->
+                .ifErrorOrEmpty(it ->
                         i.addAndGet(16)
                 )
         ;
@@ -133,19 +132,19 @@ public class AppTest
 
         i.set(0);
         WrappedResult.error(new Throwable())
-                .ifError(t->{
+                .ifError(t -> {
                     i.addAndGet(1);
                 })
-                .ifNoError(it->{
+                .ifNoError(it -> {
                     i.addAndGet(2);
                 })
-                .ifNoErrorAndOccupied(it->{
+                .ifNoErrorAndOccupied(it -> {
                     i.addAndGet(4);
                 })
-                .ifNoErrorButEmpty(()->{
+                .ifNoErrorButEmpty(() -> {
                     i.addAndGet(8);
                 })
-                .ifErrorOrEmpty(it->
+                .ifErrorOrEmpty(it ->
                         i.addAndGet(16)
                 )
         ;
@@ -163,9 +162,9 @@ public class AppTest
         assertFalse(WrappedResult.of(null).noErrorAndOccupiedOpt().isPresent());
         assertFalse(WrappedResult.error(new Throwable()).noErrorAndOccupiedOpt().isPresent());
 
-        assertEquals("1", WrappedResult.of(1).mapTo(x->x+"").result());
-        assertEquals("null",WrappedResult.of(null).mapTo(x->x+"").result());
-        assertNull(WrappedResult.of(null).mapOccupiedTo(x->x+"").result());
+        assertEquals("1", WrappedResult.of(1).mapTo(x -> x + "").result());
+        assertEquals("null", WrappedResult.of(null).mapTo(x -> x + "").result());
+        assertNull(WrappedResult.of(null).mapOccupiedTo(x -> x + "").result());
 
 
     }
