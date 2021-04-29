@@ -84,7 +84,11 @@ public class AppTest
                 })
                 .ifNoErrorButEmpty(()->{
                     i.addAndGet(8);
-                });
+                })
+                .ifErrorOrEmpty(it->
+                        i.addAndGet(16)
+                )
+        ;
         assertEquals(6, i.get());
 
         i.set(0);
@@ -100,8 +104,12 @@ public class AppTest
                 })
                 .ifNoErrorButEmpty(()->{
                     i.addAndGet(8);
-                });
-        assertEquals(10, i.get());
+                })
+                .ifErrorOrEmpty(it->
+                        i.addAndGet(16)
+                )
+        ;
+        assertEquals(26, i.get());
 
         i.set(0);
         WrappedResult.of(new Throwable())
@@ -116,7 +124,11 @@ public class AppTest
                 })
                 .ifNoErrorButEmpty(()->{
                     i.addAndGet(8);
-                });
+                })
+                .ifErrorOrEmpty(it->
+                        i.addAndGet(16)
+                )
+        ;
         assertEquals(6, i.get());
 
         i.set(0);
@@ -132,8 +144,12 @@ public class AppTest
                 })
                 .ifNoErrorButEmpty(()->{
                     i.addAndGet(8);
-                });
-        assertEquals(1, i.get());
+                })
+                .ifErrorOrEmpty(it->
+                        i.addAndGet(16)
+                )
+        ;
+        assertEquals(17, i.get());
 
         assertFalse(WrappedResult.of(1).hasErrorOpt().isPresent());
         assertFalse(WrappedResult.of(null).hasErrorOpt().isPresent());

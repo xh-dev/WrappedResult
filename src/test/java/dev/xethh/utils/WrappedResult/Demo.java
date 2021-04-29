@@ -26,6 +26,10 @@ public class Demo {
                     // Will not execute
                     System.out.println("The result contains no error but value is null(empty)");
                 })
+                .ifErrorOrEmpty(exception -> {
+                    // Will not execute
+                    System.out.println("The result contains error or value is null(empty)");
+                })
         ;
 
         System.out.println(wrapped.result());                   // 1

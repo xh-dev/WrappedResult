@@ -147,7 +147,25 @@ public interface WrappedResult<I> {
 
     /**
      * Do operation when
+     * 1. has error
+     * 2. the value is empty (null)
+     *
+     * @param operation operation to process with optional throwable which optional.empty mean the result has no error while optional non empty means has error
+     * @return WrappedResult
+     */
+    default WrappedResult<I> ifErrorOrEmpty(Consumer<Optional<Throwable>> operation) {
+        if (hasError()) {
+            operation.accept(hasErrorOpt());
+        } else if (empty()) {
+            operation.accept(Optional.empty());
+        }
+        return this;
+    }
+
+    /**
+     * Do operation when
      * 1. no error and result {@link WrappedResult#occupied()}
+     *
      * @param operation further process operation if match condition
      * @return {@link WrappedResult}
      */
