@@ -1,7 +1,9 @@
 package dev.xethh.utils.WrappedResult.exceptions;
 
+import dev.xethh.utils.WrappedResult.wrappedResult.WrappedResult;
+
 /**
- * Root Exception thrown for {@link dev.xethh.utils.WrappedResult.WrappedResult}
+ * Root Exception thrown for {@link WrappedResult}
  */
 public class WrappedResultException extends RuntimeException {
     public WrappedResultException() {

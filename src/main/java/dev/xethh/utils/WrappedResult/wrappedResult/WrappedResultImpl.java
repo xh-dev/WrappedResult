@@ -1,4 +1,4 @@
-package dev.xethh.utils.WrappedResult;
+package dev.xethh.utils.WrappedResult.wrappedResult;
 
 import dev.xethh.utils.WrappedResult.exceptions.NoExceptionForError;
 

@@ -1,6 +1,7 @@
 package dev.xethh.utils.WrappedResult;
 
 import dev.xethh.utils.WrappedResult.exceptions.NoExceptionForError;
+import dev.xethh.utils.WrappedResult.wrappedResult.WrappedResult;
 import org.junit.Test;
 
 import java.util.concurrent.atomic.AtomicInteger;

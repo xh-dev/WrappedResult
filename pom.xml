@@ -12,7 +12,7 @@
 
     <groupId>dev.xethh.utils</groupId>
     <artifactId>WrappedResult</artifactId>
-    <version>1.0.2</version>
+    <version>1.0.3</version>
 
     <name>WrappedResult</name>
     <properties>
@@ -28,5 +28,20 @@
         <developerConnection>scm:git:git@github.com:xh-dev/WrappedResult.git</developerConnection>
         <url>https://github.com/xh-dev/WrappedResult</url>
     </scm>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>1.18.22</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>io.vavr</groupId>
+            <artifactId>vavr</artifactId>
+            <version>0.10.4</version>
+        </dependency>
+
+    </dependencies>
 
 </project>

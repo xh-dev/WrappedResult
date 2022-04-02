@@ -1,5 +1,7 @@
 package dev.xethh.utils.WrappedResult;
 
+import dev.xethh.utils.WrappedResult.wrappedResult.WrappedResult;
+
 public class Demo {
     public static void main(String[] args) {
         int resultFromProcess = 1;

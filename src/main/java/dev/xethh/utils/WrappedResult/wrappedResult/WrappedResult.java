@@ -1,4 +1,4 @@
-package dev.xethh.utils.WrappedResult;
+package dev.xethh.utils.WrappedResult.wrappedResult;
 
 import java.util.Optional;
 import java.util.concurrent.Callable;
