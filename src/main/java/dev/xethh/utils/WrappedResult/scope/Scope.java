@@ -1,14 +1,11 @@
 package dev.xethh.utils.WrappedResult.scope;
 
 import dev.xethh.utils.WrappedResult.extensions.AnyObjectExtension;
-import dev.xethh.utils.WrappedResult.matching.ItemMatcher;
-import io.vavr.Predicates;
 import io.vavr.control.Try;
 import lombok.experimental.ExtensionMethod;
 
 import java.util.function.Consumer;
 import java.util.function.Function;
-import java.util.function.Predicate;
 
 /**
  * Scope function provide temporary scope for object initializing or transformation
