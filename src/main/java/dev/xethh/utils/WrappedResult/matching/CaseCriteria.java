@@ -31,11 +31,11 @@ public class CaseCriteria<T, X>{
     /**
      * except the base test {@link Predicate}, add more testing for the case matching.
      * similar to match guard is scala
-     * @param op {@link Function} providing the existing predicate for adding more testing
+     * @param predicate {@link Predicate} for more testing
      * @return new instance of {@link CaseCriteria}
      */
-    public CaseCriteria<T, X> also(Function<Predicate<T>, Predicate<T>> op){
-        return new CaseCriteria<>(itemTransformer, op.apply(predicate));
+    public CaseCriteria<T, X> also(Predicate<T> predicate){
+        return new CaseCriteria<>(itemTransformer, predicate.and(predicate::test));
     }
 
     /**
