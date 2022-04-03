@@ -6,8 +6,13 @@
 <dependency>
     <groupId>dev.xethh.utils</groupId>
     <artifactId>WrappedResult</artifactId>
-    <version>1.0.0</version>
+    <version>1.0.4</version>
 </dependency>
+```
+
+### Gradle
+```groovy
+implementation 'dev.xethh.utils:WrappedResult:1.0.4'
 ```
 
 
