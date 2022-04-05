@@ -6,6 +6,7 @@ import io.vavr.Tuple2;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
@@ -84,6 +85,44 @@ public class ItemTransformer<T, X> {
     }
 
     /**
+     * Adding case for input value is null
+     *
+     * @return {@link CaseCriteria} as intermediate instance
+     */
+    public CaseCriteria<T, X> isNull() {
+        return inCase(Objects::isNull);
+    }
+
+    /**
+     * Adding case for input value is not null
+     *
+     * @return {@link CaseCriteria} as intermediate instance
+     */
+    public CaseCriteria<T, X> isNonNull() {
+        return inCase(Objects::nonNull);
+    }
+
+    /**
+     * Adding case for input is sub class of specific class
+     *
+     * @param clazz the class to be tested
+     * @return {@link CaseCriteria} as intermediate instance
+     */
+    public CaseCriteria<T, X> isSubClassOf(Class<? extends T> clazz) {
+        return inCase(it -> clazz != null && clazz.isInstance(it));
+    }
+
+    /**
+     * Adding case for input is exact the specific class
+     *
+     * @param clazz the class to be tested
+     * @return {@link CaseCriteria} as intermediate instance
+     */
+    public CaseCriteria<T, X> isExactClassOf(Class<? extends T> clazz) {
+        return inCase(it -> it != null && it.getClass() == clazz);
+    }
+
+    /**
      * Default value if none of the match case in {@link ItemTransformer#matchList}.
      * If missing the default(value is null), {@link NoMatchFoundException} is thrown
      *
@@ -91,7 +130,7 @@ public class ItemTransformer<T, X> {
      * @return new instance of {@link ItemTransformer}
      */
     public ItemTransformer<T, X> defaultValueSupplier(Supplier<X> supplier) {
-        return new ItemTransformer<>(from, to, it->supplier.get(), matchList);
+        return new ItemTransformer<>(from, to, it -> supplier.get(), matchList);
     }
 
     /**

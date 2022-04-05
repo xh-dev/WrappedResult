@@ -38,5 +38,52 @@ public class ItemTransformerTest {
             assertThrows(NoMatchFoundException.class,()->matcher.matches(40));
         }
 
+
+        @DisplayName("Test is sub class ")
+        @Test
+        public void testIsSubClassOf(){
+            ItemTransformer<Throwable, Boolean> matcher = ItemTransformer.transfer(Throwable.class, Boolean.class)
+                    .isSubClassOf(RuntimeException.class).thenValue(true)
+                    .defaultValue(false);
+            assertFalse(()->matcher.matches(null));
+            assertTrue(()->matcher.matches(new AException()));
+            assertTrue(()->matcher.matches(new RuntimeException()));
+            assertFalse(()->matcher.matches(new BNotException()));
+
+        }
+
+        @DisplayName("Test is exact class")
+        @Test
+        public void testIsExactClassOf(){
+            ItemTransformer<Throwable, Boolean> matcher = ItemTransformer.transfer(Throwable.class, Boolean.class)
+                    .isExactClassOf(RuntimeException.class).thenValue(true)
+                    .defaultValue(false);
+            assertFalse(()->matcher.matches(null));
+            assertFalse(()->matcher.matches(new AException()));
+            assertTrue(()->matcher.matches(new RuntimeException()));
+            assertFalse(()->matcher.matches(new BNotException()));
+        }
+
+        @DisplayName("Test is input is null")
+        @Test
+        public void testIsNull(){
+            ItemTransformer<Throwable, Boolean> matcher = ItemTransformer.transfer(Throwable.class, Boolean.class)
+                    .isNull().thenValue(true)
+                    .defaultValue(false);
+            assertTrue(()->matcher.matches(null));
+            assertFalse(()->matcher.matches(new AException()));
+        }
+
+        @DisplayName("Test is input is not null")
+        @Test
+        public void testIsNonNull(){
+            ItemTransformer<Throwable, Boolean> matcher = ItemTransformer.transfer(Throwable.class, Boolean.class)
+                    .isNonNull().thenValue(true)
+                    .defaultValue(false);
+            assertFalse(()->matcher.matches(null));
+            assertTrue(()->matcher.matches(new AException()));
+        }
     }
+    public static class AException extends RuntimeException{}
+    public static class BNotException extends Exception{}
 }
