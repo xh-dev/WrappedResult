@@ -3,6 +3,7 @@ package dev.xethh.utils.WrappedResult.matching;
 import dev.xethh.utils.WrappedResult.scope.Scope;
 import io.vavr.Tuple;
 import io.vavr.Tuple2;
+import io.vavr.control.Try;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -70,7 +71,7 @@ public class ItemTransformer<T, X> {
      * @param predicate the {@link Predicate} to test if item match
      * @return {@link CaseCriteria} as intermediate instance
      */
-    public CaseCriteria<T, X> inCase(Predicate<T> predicate) {
+    public CaseCriteria<T, X, T> inCase(Predicate<T> predicate) {
         return new CaseCriteria<>(this, predicate);
     }
 
@@ -80,7 +81,7 @@ public class ItemTransformer<T, X> {
      * @param value to be test with {@link Object#equals(Object)}
      * @return {@link CaseCriteria} as intermediate instance
      */
-    public CaseCriteria<T, X> inCaseValue(T value) {
+    public CaseCriteria<T, X, T> inCaseValue(T value) {
         return inCase((t) -> t.equals(value));
     }
 
@@ -89,7 +90,7 @@ public class ItemTransformer<T, X> {
      *
      * @return {@link CaseCriteria} as intermediate instance
      */
-    public CaseCriteria<T, X> isNull() {
+    public CaseCriteria<T, X, T> isNull() {
         return inCase(Objects::isNull);
     }
 
@@ -98,7 +99,7 @@ public class ItemTransformer<T, X> {
      *
      * @return {@link CaseCriteria} as intermediate instance
      */
-    public CaseCriteria<T, X> isNonNull() {
+    public CaseCriteria<T, X, T> isNonNull() {
         return inCase(Objects::nonNull);
     }
 
@@ -106,20 +107,22 @@ public class ItemTransformer<T, X> {
      * Adding case for input is sub class of specific class
      *
      * @param clazz the class to be tested
+     * @param <Y> generic type {@link Y} indicate the predicate type of the {@link CaseCriteria}
      * @return {@link CaseCriteria} as intermediate instance
      */
-    public CaseCriteria<T, X> isSubClassOf(Class<? extends T> clazz) {
-        return inCase(it -> clazz != null && clazz.isInstance(it));
+    public <Y extends T> CaseCriteria<T, X, Y> isSubClassOf(Class<Y> clazz) {
+        return (CaseCriteria<T, X, Y>) inCase(it -> clazz != null && clazz.isInstance(it));
     }
 
     /**
      * Adding case for input is exact the specific class
      *
      * @param clazz the class to be tested
+     * @param <Y> generic type {@link Y} indicate the predicate type of the {@link CaseCriteria}
      * @return {@link CaseCriteria} as intermediate instance
      */
-    public CaseCriteria<T, X> isExactClassOf(Class<? extends T> clazz) {
-        return inCase(it -> it != null && it.getClass() == clazz);
+    public <Y extends T> CaseCriteria<T, X, Y> isExactClassOf(Class<Y> clazz) {
+        return (CaseCriteria<T, X, Y>) inCase(it -> it != null && it.getClass() == clazz);
     }
 
     /**
@@ -205,6 +208,16 @@ public class ItemTransformer<T, X> {
         } else {
             throw new NoMatchFoundException();
         }
+    }
+
+    /**
+     * Try with {@link ItemTransformer#matches(Object)}
+     *
+     * @param t source value to be tested
+     * @return {@link Try} of target value[{@link X}]
+     */
+    public Try<X> tryMatches(T t) {
+        return Try.of(()->matches(t));
     }
 
 }

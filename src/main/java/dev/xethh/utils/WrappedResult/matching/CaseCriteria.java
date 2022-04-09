@@ -7,8 +7,9 @@ import java.util.function.Predicate;
  * Intermediate class for creating match case in {@link ItemTransformer}
  * @param <T> the source generic class transform from
  * @param <X> the target generic class transform to
+ * @param <Y> temporary generic class for type safe of the {@link CaseCriteria#predicate} and {@link CaseCriteria#then(Function)}
  */
-public class CaseCriteria<T, X>{
+public class CaseCriteria<T, X, Y extends T>{
     /**
      * {@link ItemTransformer} instance used for creating new {@link ItemTransformer}
      */
@@ -16,14 +17,14 @@ public class CaseCriteria<T, X>{
     /**
      * the testing {@link Predicate} for the case matching
      */
-    private final Predicate<T> predicate;
+    private final Predicate<Y> predicate;
 
     /**
      * constructor
      * @param itemTransformer parent object of {@link ItemTransformer}
      * @param predicateList the testing {@link Predicate} for the case matching
      */
-    protected CaseCriteria(ItemTransformer<T, X> itemTransformer, Predicate<T> predicateList) {
+    protected CaseCriteria(ItemTransformer<T, X> itemTransformer, Predicate<Y> predicateList) {
         this.itemTransformer = itemTransformer;
         this.predicate = predicateList;
     }
@@ -34,8 +35,8 @@ public class CaseCriteria<T, X>{
      * @param predicate {@link Predicate} for more testing
      * @return new instance of {@link CaseCriteria}
      */
-    public CaseCriteria<T, X> also(Predicate<T> predicate){
-        return new CaseCriteria<>(itemTransformer, predicate.and(predicate::test));
+    public CaseCriteria<T, X, Y> also(Predicate<Y> predicate){
+        return new CaseCriteria<>(itemTransformer, this.predicate.and(predicate));
     }
 
     /**
@@ -43,8 +44,8 @@ public class CaseCriteria<T, X>{
      * @param op conversion function convert {@link T} to {@link X}
      * @return new instance of {@link ItemTransformer}
      */
-    public ItemTransformer<T, X> then(Function<T, X> op){
-        return itemTransformer.add(predicate, op);
+    public ItemTransformer<T, X> then(Function<Y, X> op){
+        return itemTransformer.add((Predicate<T>) predicate, (Function<T, X>) op);
     }
 
     /**

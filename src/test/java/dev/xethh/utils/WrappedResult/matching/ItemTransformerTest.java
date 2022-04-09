@@ -4,6 +4,8 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
+import java.util.function.Predicate;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 @DisplayName("Test ItemTransformer")
@@ -38,6 +40,18 @@ public class ItemTransformerTest {
             assertThrows(NoMatchFoundException.class,()->matcher.matches(40));
         }
 
+        @DisplayName("Test sub class type coversion of Y extends T")
+        @Test
+        public void testSubClassOfLambdaTypeConversion(){
+            ItemTransformer<Throwable, Boolean> matcher = ItemTransformer.transfer(Throwable.class, Boolean.class)
+                    .isSubClassOf(RuntimeException.class)
+                    .then(x-> true) // The type of x is RuntimeException
+                    .defaultValue(false);
+            assertFalse(()->matcher.matches(null));
+            assertTrue(()->matcher.matches(new AException()));
+            assertTrue(()->matcher.matches(new RuntimeException()));
+            assertFalse(()->matcher.matches(new BNotException()));
+        }
 
         @DisplayName("Test is sub class ")
         @Test
@@ -82,6 +96,28 @@ public class ItemTransformerTest {
                     .defaultValue(false);
             assertFalse(()->matcher.matches(null));
             assertTrue(()->matcher.matches(new AException()));
+        }
+
+        @DisplayName("Test also")
+        @Test
+        public void testAlso(){
+            ItemTransformer<Integer, String> matcher = ItemTransformer.transfer(Integer.class, String.class)
+                    .isNull().thenValue("empty")
+                    .inCase(it -> it > 10).also(it -> it < 20).then(it -> "10 - 20")
+                    .inCase(it -> it >= 20).thenValue(">= 20")
+                    .inCase(it -> it <= 10).thenValue("<= 10");
+            assertEquals("<= 10", matcher.matches(10));
+            assertEquals("10 - 20", matcher.matches(11));
+            assertEquals("10 - 20", matcher.matches(12));
+            assertEquals("10 - 20", matcher.matches(13));
+            assertEquals("10 - 20", matcher.matches(14));
+            assertEquals("10 - 20", matcher.matches(15));
+            assertEquals("10 - 20", matcher.matches(16));
+            assertEquals("10 - 20", matcher.matches(17));
+            assertEquals("10 - 20", matcher.matches(18));
+            assertEquals("10 - 20", matcher.matches(19));
+            assertEquals(">= 20", matcher.matches(20));
+
         }
     }
     public static class AException extends RuntimeException{}
