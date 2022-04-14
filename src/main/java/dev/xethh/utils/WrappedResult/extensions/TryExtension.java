@@ -1,5 +1,6 @@
 package dev.xethh.utils.WrappedResult.extensions;
 
+import dev.xethh.utils.WrappedResult.checkedWrapper.CheckWrappingException;
 import io.vavr.control.Try;
 
 import java.util.function.Consumer;
@@ -7,8 +8,18 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 
 public class TryExtension {
-    public static <A> Try<A> toTry(A a){
+    public static <T> Try<T> toTry(T a){
         return Try.of(()->a);
+    }
+    public static <T> Try<T> apply(Try<T> tryObj, Consumer<T> consumer){
+        try{
+            return tryObj.map(it->{
+                consumer.accept(it);
+                return it;
+            });
+        } catch (Exception ex){
+            throw new CheckWrappingException(ex);
+        }
     }
     public static <T> Try<T> sideEffect(Try<T> tryObj, Consumer<T> op){
         return tryObj.mapTry(it->{
