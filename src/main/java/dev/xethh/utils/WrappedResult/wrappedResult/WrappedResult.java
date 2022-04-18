@@ -1,5 +1,8 @@
 package dev.xethh.utils.WrappedResult.wrappedResult;
 
+import io.vavr.CheckedRunnable;
+import io.vavr.control.Try;
+
 import java.util.Optional;
 import java.util.concurrent.Callable;
 import java.util.function.Consumer;
@@ -58,7 +61,7 @@ public interface WrappedResult<I> {
      * @param runnable {@link Runnable} return void
      * @return {@link WrappedResult}
      */
-    static WrappedResult<Boolean> run(Runnable runnable) {
+    static WrappedResult<Boolean> run(CheckedRunnable runnable) {
         try {
             runnable.run();
             return of(true);

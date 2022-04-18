@@ -1,16 +1,14 @@
 package dev.xethh.utils.WrappedResult.extensions;
 
+import dev.xethh.utils.WrappedResult.matching.ItemTransformer;
+import io.vavr.CheckedConsumer;
 import io.vavr.control.Try;
 
-import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
 public class TryExtension {
-    public static <A> Try<A> toTry(A a){
-        return Try.of(()->a);
-    }
-    public static <T> Try<T> sideEffect(Try<T> tryObj, Consumer<T> op){
+    public static <T> Try<T> sideEffect(Try<T> tryObj, CheckedConsumer<T> op){
         return tryObj.mapTry(it->{
             op.accept(it);
             return it;
@@ -28,6 +26,12 @@ public class TryExtension {
                         return it;
                     }
                 });
-
+    }
+    public static <T, U> Try<U> mapCase(Try<T> tryObj, Class<T> from, Class<U> to, CheckedConsumer<ItemTransformer<T, U>> operation){
+        return tryObj.mapTry(it->{
+            var transformer = ItemTransformer.transfer(from, to);
+            operation.accept(transformer);
+            return transformer.matches(it);
+        });
     }
 }

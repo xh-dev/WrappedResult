@@ -1,9 +1,11 @@
 package dev.xethh.utils.WrappedResult.matching;
 
-import dev.xethh.utils.WrappedResult.scope.Scope;
+import dev.xethh.utils.WrappedResult.extensions.AnyObjectExtension;
+import dev.xethh.utils.WrappedResult.extensions.TryExtension;
 import io.vavr.Tuple;
 import io.vavr.Tuple2;
 import io.vavr.control.Try;
+import lombok.experimental.ExtensionMethod;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,6 +30,10 @@ import java.util.function.Supplier;
  * @param <T> the source generic class transform from
  * @param <X> the target generic class transform to
  */
+@ExtensionMethod({
+        AnyObjectExtension.class,
+        TryExtension.class
+})
 public class ItemTransformer<T, X> {
     /**
      * tag class indicate the source type of the transformation
@@ -169,7 +175,7 @@ public class ItemTransformer<T, X> {
      */
     protected ItemTransformer<T, X> add(Predicate<T> predicate, Function<T, X> op) {
         return new ItemTransformer<>(from, to, defaultValue,
-                Scope.of(matchList).apply(it -> it.add(Tuple.of(predicate, op))).unscoped()
+                matchList.toTry().sideEffect(it->it.add(Tuple.of(predicate, op))).get()
         );
     }
 
